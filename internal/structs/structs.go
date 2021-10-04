@@ -2,7 +2,6 @@ package structs
 
 import (
 	"errors"
-	"fmt"
 	"reflect"
 )
 
@@ -39,7 +38,6 @@ func (cfg Parser) MaintainFields() error {
 		return err
 	}
 	for _, field := range fields {
-		fmt.Println(field.Elem.Type().Name())
 		field.Set()
 	}
 	return nil

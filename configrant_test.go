@@ -3,7 +3,6 @@ package configrant
 import (
 	"reflect"
 	"testing"
-	"time"
 
 	"github.com/umalmyha/configrant/internal/structs"
 )
@@ -24,7 +23,7 @@ type Config struct {
 	Bytes     []byte         `cfgrant:"default:1 2 3 4 5"`
 	Sequence  map[string]int `cfgrant:"default:second:2 third:3 first:1"`
 	IsAsync   bool           `cfgrant:"default:true"`
-	Timeout   time.Duration  `cfgrant:"default:5s"`
+	// Timeout   time.Duration  `cfgrant:"default:5s"` // TODO: add support as it used pretty frequently in config
 	Password  string
 	Substruct ConfigSubstruct
 }
