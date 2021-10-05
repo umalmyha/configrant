@@ -89,7 +89,7 @@ type sliceFieldSetter struct{}
 
 func (s *sliceFieldSetter) Apply(field reflect.Value, value string) error {
 	typ := field.Type()
-	values := strings.Split(strings.TrimSpace(value), " ")
+	values := strings.Split(strings.TrimSpace(value), ";")
 	count := len(values)
 	slice := reflect.MakeSlice(typ, count, count)
 	if err := s.fillSlice(slice, values); err != nil {
@@ -122,7 +122,7 @@ func (s *mapFieldSetter) Apply(field reflect.Value, value string) error {
 		return err
 	}
 	m := reflect.MakeMap(typ)
-	keyValues := strings.Split(strings.TrimSpace(value), " ")
+	keyValues := strings.Split(strings.TrimSpace(value), ";")
 	for _, keyValue := range keyValues {
 		keyStr, valStr, err := s.splitKeyValuePair(keyValue)
 		if err != nil {

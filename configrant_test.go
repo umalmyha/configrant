@@ -20,8 +20,8 @@ type Config struct {
 	Retries   int            `cfgrant:"env:RETRIES_ENV,default:3"`
 	OwnerPtr  *string        `cfgrant:"env:OWNER,default:James"`
 	Pass_hash string         `cfgrant:"-"`
-	Bytes     []byte         `cfgrant:"default:1 2 3 4 5"`
-	Sequence  map[string]int `cfgrant:"default:second:2 third:3 first:1"`
+	Bytes     []byte         `cfgrant:"default:1;2;3;4;5"`
+	Sequence  map[string]int `cfgrant:"default:second:2;third:3;first:1"`
 	IsAsync   bool           `cfgrant:"default:true"`
 	// Timeout   time.Duration  `cfgrant:"default:5s"` // TODO: add support as it used pretty frequently in config
 	Password  string
