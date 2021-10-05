@@ -5,6 +5,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type FieldSetter interface {
@@ -18,7 +19,11 @@ func determineFieldSetter(typ reflect.Type) (setter FieldSetter, err error) {
 	case reflect.Bool:
 		setter = new(boolFieldSetter)
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		setter = new(intFieldSetter)
+		if isTimeDurationType(typ) {
+			setter = new(timeDurationFieldSetter)
+		} else {
+			setter = new(intFieldSetter)
+		}
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 		setter = new(uintFieldSetter)
 	case reflect.Float32, reflect.Float64:
@@ -27,11 +32,14 @@ func determineFieldSetter(typ reflect.Type) (setter FieldSetter, err error) {
 		setter = new(sliceFieldSetter)
 	case reflect.Map:
 		setter = new(mapFieldSetter)
-		// TODO: Add support for time.Duration???
 	default:
 		err = fmt.Errorf("type %s is not supported for configuration", typ.Name())
 	}
 	return
+}
+
+func isTimeDurationType(typ reflect.Type) bool {
+	return typ.Kind() == reflect.Int64 && typ.PkgPath() == "time" && typ.Name() == "Duration"
 }
 
 type stringFieldSetter struct{}
@@ -162,4 +170,15 @@ func (s *mapFieldSetter) splitKeyValuePair(keyValue string) (key string, value s
 	}
 	key, value = splittedPair[0], splittedPair[1]
 	return
+}
+
+type timeDurationFieldSetter struct{}
+
+func (s *timeDurationFieldSetter) Apply(field reflect.Value, value string) error {
+	duration, err := time.ParseDuration(value)
+	if err != nil {
+		return err
+	}
+	field.SetInt(int64(duration))
+	return nil
 }

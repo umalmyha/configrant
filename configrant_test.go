@@ -3,6 +3,7 @@ package configrant
 import (
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/umalmyha/configrant/internal/structs"
 )
@@ -23,7 +24,7 @@ type Config struct {
 	Bytes     []byte         `cfgrant:"default:1;2;3;4;5"`
 	Sequence  map[string]int `cfgrant:"default:second:2;third:3;first:1"`
 	IsAsync   bool           `cfgrant:"default:true"`
-	// Timeout   time.Duration  `cfgrant:"default:5s"` // TODO: add support as it used pretty frequently in config
+	Timeout   time.Duration  `cfgrant:"default:5s"`
 	Password  string
 	Substruct ConfigSubstruct
 }
@@ -96,6 +97,15 @@ func TestProcessSuccess(t *testing.T) {
 	// default true value is expected
 	if cfg.IsAsync != true {
 		t.Errorf("Expect field 'isAsync' to be equal true, got %t", cfg.IsAsync)
+	}
+
+	// Expect default value for Timeout
+	expectedTimeout, err := time.ParseDuration("5s")
+	if err != nil {
+		t.Fatalf("Unexpected error occurred: %v", err)
+	}
+	if cfg.Timeout != expectedTimeout {
+		t.Errorf("Expect field 'Timeout' to be equal %d, got %d", expectedTimeout, cfg.Timeout)
 	}
 
 	// Field is not tagged, but not ignored and set empty value instead of defined on struct initialization
