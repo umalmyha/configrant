@@ -22,7 +22,7 @@ type Config struct {
 Two options are supported:
 
 ```
-    env 	- environment variable name
+    env     - environment variable name
     default - default value
 ```
 
