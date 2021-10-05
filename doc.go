@@ -12,7 +12,7 @@ Configrant uses special `cfgrant` tag to provide details on field maintenance.
 
 Two options are supported:
 
-	env 	- environment variable name
+	env     - environment variable name
 	default - default value
 
 For struct example mentioned above, we tell configrant:
