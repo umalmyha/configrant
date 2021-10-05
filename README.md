@@ -75,7 +75,7 @@ You must define exported fields (capitalized) in your configuration structures, 
 ```go
 type Config struct {
 	url 	string `cfgrant:"env:ENV_URL,default:http://localhost:8080"` // field is unexportable, so not settable -> will be ignored even if tagged
-	IsAsync	bool   `cfgrant:"default:true"` 							 // field is exportable, so settable
+	IsAsync	bool   `cfgrant:"default:true"` // field is exportable, so settable
 }
 ```
 
@@ -84,8 +84,8 @@ For tag options, please, use comma as a separator. Using different separator mig
 ```go
 type Config struct {
 	Url 	string `cfgrant:"env:ENV_URL,default:http://localhost:8080"` // correct tag
-	IsAsync	bool   `cfgrant:"env:ENV_ASYNC;default:true"` 				 // incorrect tag -> ';' delimiter is used instead of ','
-	Retries int    `cfgrant:"env:ENV_RETRIES,option:value"` 			 // correct tag, but property 'option' is ignored
+	IsAsync	bool   `cfgrant:"env:ENV_ASYNC;default:true"` // incorrect tag -> ';' delimiter is used instead of ','
+	Retries int    `cfgrant:"env:ENV_RETRIES,option:value"` // correct tag, but property 'option' is ignored
 }
 ```
 
@@ -124,8 +124,8 @@ type SubConfig struct {
 	Name string `cfgrant:"env:ENV_NAME"`
 }
 type Config struct {
-	IsAsync	bool 	  `cfgrant:"env:ENV_ASYNC,default:true"`
-	Sc		SubConfig
+	IsAsync	bool `cfgrant:"env:ENV_ASYNC,default:true"`
+	Sc SubConfig
 }
 ```
 
@@ -134,7 +134,7 @@ You must set fields for ignoring explicitly by adding `cfgrant:"-"` or values yo
 ```go
 type Config struct {
 	Count	int `cfgrant:"-"` // ingored -> if on initialization we set Count equal to 5 it will stay unchanged
-	Retries int				  // not tagged and not ignored -> if on initialization we set Retries equal to 3 it will be set to 0 (zero value)
+	Retries int	// not tagged and not ignored -> if on initialization we set Retries equal to 3 it will be set to 0 (zero value)
 }
 ```
 
