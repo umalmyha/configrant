@@ -22,8 +22,8 @@ type Config struct {
 Two options are supported:
 
 ```
-    env     - environment variable name
-    default - default value
+env     - environment variable name
+default - default value
 ```
 
 For struct example mentioned above, we tell configrant:
