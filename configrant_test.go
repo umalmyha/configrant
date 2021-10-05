@@ -20,7 +20,7 @@ type Config struct {
 	Url       string         `cfgrant:"default:http://localhost:3000"`
 	Retries   int            `cfgrant:"env:RETRIES_ENV,default:3"`
 	OwnerPtr  *string        `cfgrant:"env:OWNER,default:James"`
-	Pass_hash string         `cfgrant:"-"`
+	PassHash  string         `cfgrant:"-"`
 	Bytes     []byte         `cfgrant:"default:1;2;3;4;5"`
 	Sequence  map[string]int `cfgrant:"default:second:2;third:3;first:1"`
 	IsAsync   bool           `cfgrant:"default:true"`
@@ -31,8 +31,8 @@ type Config struct {
 
 func TestProcessSuccess(t *testing.T) {
 	cfg := &Config{
-		Password:  "password",
-		Pass_hash: "d1e8a70b5ccab1dc2f56bbf7e99f064a660c08e361a35751b9c483c88943d082",
+		Password: "password",
+		PassHash: "d1e8a70b5ccab1dc2f56bbf7e99f064a660c08e361a35751b9c483c88943d082",
 	}
 
 	// set environment variables
@@ -74,8 +74,8 @@ func TestProcessSuccess(t *testing.T) {
 	}
 
 	// field is ignored with "-", so value should stay unchanged
-	if cfg.Pass_hash != "d1e8a70b5ccab1dc2f56bbf7e99f064a660c08e361a35751b9c483c88943d082" {
-		t.Errorf(`Expect field 'Pass_hash' to be equal "d1e8a70b5ccab1dc2f56bbf7e99f064a660c08e361a35751b9c483c88943d082", got %s`, cfg.Pass_hash)
+	if cfg.PassHash != "d1e8a70b5ccab1dc2f56bbf7e99f064a660c08e361a35751b9c483c88943d082" {
+		t.Errorf(`Expect field 'PassHash' to be equal "d1e8a70b5ccab1dc2f56bbf7e99f064a660c08e361a35751b9c483c88943d082", got %s`, cfg.PassHash)
 	}
 
 	// slice must be initialized
