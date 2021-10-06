@@ -4,10 +4,13 @@ import (
 	"os"
 	"reflect"
 	"strings"
+
+	"github.com/umalmyha/configrant/internal/cfgargs"
 )
 
 type Field struct {
 	Elem           reflect.Value
+	ArgName        string
 	EnvVarName     string
 	DefaultValue   string
 	IsConfigurable bool
@@ -23,6 +26,10 @@ func (f *Field) Set() error {
 }
 
 func (f *Field) ValueString() string {
+	argValue := cfgargs.Lookup(f.ArgName)
+	if argValue != "" {
+		return argValue
+	}
 	envVarValue := os.Getenv(f.EnvVarName)
 	if envVarValue != "" {
 		return envVarValue
@@ -45,9 +52,10 @@ func NewField(typeOfField reflect.StructField, elemOfField reflect.Value) (field
 		field.IsConfigurable = false
 		return
 	}
-	def, env := parseConfigrantTag(tagStr)
+	def, env, arg := parseConfigrantTag(tagStr)
 	field.DefaultValue = def
 	field.EnvVarName = env
+	field.ArgName = arg
 	return
 }
 
@@ -62,7 +70,7 @@ func extractFieldElemOf(field reflect.Value) (elemOf reflect.Value) {
 	return
 }
 
-func parseConfigrantTag(tagStr string) (def string, env string) {
+func parseConfigrantTag(tagStr string) (def string, env string, arg string) {
 	if tagStr == "" {
 		return
 	}
@@ -75,6 +83,8 @@ func parseConfigrantTag(tagStr string) (def string, env string) {
 			def = value
 		case "env":
 			env = value
+		case "arg":
+			arg = value
 		}
 	}
 	return

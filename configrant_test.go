@@ -1,6 +1,7 @@
 package configrant
 
 import (
+	"os"
 	"reflect"
 	"testing"
 	"time"
@@ -23,8 +24,8 @@ type Config struct {
 	PassHash  string         `cfgrant:"-"`
 	Bytes     []byte         `cfgrant:"default:1;2;3;4;5"`
 	Sequence  map[string]int `cfgrant:"default:second:2;third:3;first:1"`
-	IsAsync   bool           `cfgrant:"default:true"`
-	Timeout   time.Duration  `cfgrant:"default:5s"`
+	IsAsync   bool           `cfgrant:"default:false,arg:-async,env:ASYNC_ENV"`
+	Timeout   time.Duration  `cfgrant:"default:5s,arg:--timeout"`
 	Password  string
 	Substruct ConfigSubstruct
 }
@@ -38,6 +39,10 @@ func TestProcessSuccess(t *testing.T) {
 	// set environment variables
 	t.Setenv("NAME_ENV", "configuration")
 	t.Setenv("OWNER", "Ronald")
+	t.Setenv("ASYNC_ENV", "false")
+
+	// set os.Args
+	os.Args = []string{"-async", "--timeout=7s"}
 
 	t.Log("Expect success parse of complex config struct")
 
@@ -94,13 +99,13 @@ func TestProcessSuccess(t *testing.T) {
 		t.Errorf("Expect field 'Sequence' to be equal map[first:1 second:2 third:3], got %v", cfg.Sequence)
 	}
 
-	// default true value is expected
+	// default, env and arg are defined, but arg has priority over all other options
 	if cfg.IsAsync != true {
 		t.Errorf("Expect field 'isAsync' to be equal true, got %t", cfg.IsAsync)
 	}
 
 	// Expect default value for Timeout
-	expectedTimeout, err := time.ParseDuration("5s")
+	expectedTimeout, err := time.ParseDuration("7s")
 	if err != nil {
 		t.Fatalf("Unexpected error occurred: %v", err)
 	}
