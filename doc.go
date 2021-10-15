@@ -22,7 +22,7 @@ For struct example mentioned above, we tell configrant:
 
 2. Take default value for field isAsync.
 
-So, command line argument has highest priority, following environment variable and default value in the end.
+If on structure initialization non-zero value has been provided for field, it won't be overwritten by configrant, even if corresponding tag is specified. So, if value is provided, field stays unchanged; if not - command line argument has highest priority, following environment variable and default value in the end.
 
 Simple example
 
@@ -106,11 +106,11 @@ Embedded strucutres are supported as well. Tag is not required for them:
 		Sc      SubConfig
 	}
 
-You must set fields for ignoring explicitly by adding tag `cfgrant:"-"` or values you specified on structure initialization will be overwritten:
+You can specify fields for ignoring explicitly by adding tag `cfgrant:"-"`. If confgrant tag is not specified, nothing will happen:
 
 	type Config struct {
-		Count	int `cfgrant:"-"` // ingored -> if on initialization we set Count equal to 5 it will stay unchanged
-		Retries int	              // not tagged and not ignored -> if on initialization we set Retries equal to 3 it will be set to 0 (zero value)
+		Count	int `cfgrant:"-"` // ingored
+		Retries int	              // not tagged, has no effect -> if on initialization we set Retries equal to 3 it won't be overwritten
 	}
 
 You can use pointers as well:

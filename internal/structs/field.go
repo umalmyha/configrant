@@ -17,6 +17,9 @@ type Field struct {
 }
 
 func (f *Field) Set() error {
+	if !f.Elem.IsZero() {
+		return nil
+	}
 	value := f.ValueString()
 	setter, err := determineFieldSetter(f.Elem.Type())
 	if err != nil {

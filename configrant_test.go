@@ -26,20 +26,23 @@ type Config struct {
 	Sequence  map[string]int `cfgrant:"default:second:2;third:3;first:1"`
 	IsAsync   bool           `cfgrant:"default:false,arg:-async,env:ASYNC_ENV"`
 	Timeout   time.Duration  `cfgrant:"default:5s,arg:--timeout"`
+	UserName  string         `cfgrant:"default:postgres,env:DB_USERNAME"`
 	Password  string
 	Substruct ConfigSubstruct
 }
 
 func TestProcessSuccess(t *testing.T) {
 	cfg := &Config{
-		Password: "password",
+		Password: "secret_password",
 		PassHash: "d1e8a70b5ccab1dc2f56bbf7e99f064a660c08e361a35751b9c483c88943d082",
+		UserName: "admin",
 	}
 
 	// set environment variables
 	t.Setenv("NAME_ENV", "configuration")
 	t.Setenv("OWNER", "Ronald")
 	t.Setenv("ASYNC_ENV", "false")
+	t.Setenv("DB_USERNAME", "dbmanager")
 
 	// set os.Args
 	os.Args = []string{"-async", "--timeout=7s"}
@@ -113,9 +116,14 @@ func TestProcessSuccess(t *testing.T) {
 		t.Errorf("Expect field 'Timeout' to be equal %d, got %d", expectedTimeout, cfg.Timeout)
 	}
 
-	// Field is not tagged, but not ignored and set empty value instead of defined on struct initialization
-	if cfg.Password != "" {
+	// Field is not tagged, but it has non zero value, so isn't overwritten
+	if cfg.Password != "secret_password" {
 		t.Errorf(`Expect field 'Password' to be equal "", got %s`, cfg.Password)
+	}
+
+	// Field is tagged, but it has non zero value, so isn't overwritten
+	if cfg.UserName != "admin" {
+		t.Errorf(`Expect field 'Username' to be equal "admin", got %s`, cfg.UserName)
 	}
 
 	// Expect to be default, because env is specified, but not set

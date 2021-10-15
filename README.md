@@ -10,7 +10,7 @@ go get github.com/umalmyha/configrant
 
 ## Usage
 
-Before usage, please, see detailed [documentation](https://pkg.go.dev/github.com/umalmyha/configrant).
+Before usage, please, see detailed [documentation](https://pkg.go.dev/github.com/umalmyha/configrant). There are some edge cases you should be aware of.
 
 See below example of processing tagged configuration strucutre:
 
@@ -39,4 +39,4 @@ if err != nil {
 
 ## Contribution and bugs
 
-Any ideas for package improvement and contribution is appreciated.
+Any ideas for package improvement and contribution are appreciated.
